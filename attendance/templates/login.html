@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Attendance — Log In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lexend:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07070f;
+      --bg-elevated: #101020;
+      --card: #12121f;
+      --card-2: #171728;
+      --card-border: rgba(255, 255, 255, 0.07);
+      --card-border-hover: rgba(129, 140, 248, 0.4);
+
+      --indigo: #6366f1;
+      --indigo-bright: #818cf8;
+      --violet: #a855f7;
+      --pink: #ec4899;
+      --blue: #38bdf8;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+
+      --text: #f5f5fa;
+      --text-dim: #9b9bb0;
+      --text-faint: #6c6c85;
+
+      --grad-main: linear-gradient(135deg, #818cf8 0%, #6366f1 45%, #a855f7 100%);
+      --shadow-glow: 0 8px 30px rgba(99, 102, 241, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    ::selection {
+      background: rgba(129, 140, 248, 0.35);
+    }
+
+    body {
+      background:
+        radial-gradient(900px 500px at 10% -8%, rgba(129, 140, 248, 0.14), transparent 60%),
+        radial-gradient(800px 460px at 95% 0%, rgba(168, 85, 247, 0.10), transparent 60%),
+        radial-gradient(700px 500px at 50% 110%, rgba(56, 189, 248, 0.06), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    h1, .brand-name {
+      font-family: "Lexend", "Inter", sans-serif;
+    }
+
+    .auth-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--grad-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .brand-name {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #fff, #c7c9ff 80%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .auth-card {
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px 28px;
+    }
+
+    .auth-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .auth-subtitle {
+      font-size: 14px;
+      color: var(--text-faint);
+      text-align: center;
+      margin-bottom: 26px;
+      font-weight: 500;
+    }
+
+    .field-group {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 11.5px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .field-input-wrap {
+      position: relative;
+    }
+
+    .field-input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--card-border);
+      color: var(--text);
+      padding: 12px 14px 12px 42px;
+      border-radius: 12px;
+      font-size: 14.5px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s ease;
+    }
+
+    .field-input:focus {
+      border-color: var(--indigo-bright);
+    }
+
+    .field-input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 17px;
+      height: 17px;
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+
+    .field-error {
+      font-size: 12.5px;
+      color: #f87171;
+      font-weight: 600;
+      margin-top: 6px;
+      min-height: 16px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--grad-main);
+      color: #fff;
+      padding: 13px 20px;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.38);
+      transition: transform .15s ease, box-shadow .2s ease, filter .15s ease;
+      margin-top: 4px;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 10px 30px rgba(129, 140, 248, 0.55);
+      filter: brightness(1.06);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 13.5px;
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    .auth-switch a {
+      color: var(--indigo-bright);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .auth-switch a:hover {
+      text-decoration: underline;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1b1b2e;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 13px 22px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 200;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 460px) {
+      .auth-card {
+        padding: 26px 20px;
+        border-radius: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="auth-wrap">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M9 12l2 2 4-4" />
+          <rect x="3" y="3" width="18" height="18" rx="5" />
+        </svg>
+      </div>
+      <div class="brand-name">Digital Attendance</div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-subtitle">Log in to continue to your account</div>
+
+      <form id="loginForm" novalidate>
+        <div class="field-group">
+          <label class="field-label" for="email">Email ID</label>
+          <div class="field-input-wrap">
+            <svg class="field-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 6-10 7L2 6" />
+            </svg>
+            <input class="field-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="field-error" id="emailError"></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <div class="field-input-wrap">
+            <svg class="field-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <input class="field-input" type="password" id="password" placeholder="Enter your password"
+              autocomplete="current-password">
+          </div>
+          <div class="field-error" id="passwordError"></div>
+        </div>
+
+        <button class="btn-primary" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
+          </svg>
+          Log In
+        </button>
+      </form>
+
+      <div class="auth-switch">
+        Don't have an account? <a href="/signup/">Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Logged in successfully</div>
+
+  <script>
+    const CSRF_TOKEN = '{{ csrf_token }}';
+    const form = document.getElementById('loginForm');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function isValidEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      emailError.textContent = '';
+      passwordError.textContent = '';
+
+      let hasError = false;
+
+      if (!email.value.trim()) {
+        emailError.textContent = 'Email is required';
+        hasError = true;
+      } else if (!isValidEmail(email.value.trim())) {
+        emailError.textContent = 'Enter a valid email address';
+        hasError = true;
+      }
+
+      if (!password.value) {
+        passwordError.textContent = 'Password is required';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      try {
+        const res = await fetch('/api/login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': CSRF_TOKEN
+          },
+          body: JSON.stringify({
+            email: email.value.trim(),
+            password: password.value
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Logged in successfully');
+          setTimeout(() => { window.location.href = '/'; }, 700);
+        } else {
+          showToast(data.message || 'Login failed');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('An error occurred during login');
+      }
+    });
+  </script>
+
+</body>
+
+</html>

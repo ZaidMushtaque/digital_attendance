@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Attendance — Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lexend:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07070f;
+      --bg-elevated: #101020;
+      --card: #12121f;
+      --card-2: #171728;
+      --card-border: rgba(255, 255, 255, 0.07);
+      --card-border-hover: rgba(129, 140, 248, 0.4);
+
+      --indigo: #6366f1;
+      --indigo-bright: #818cf8;
+      --violet: #a855f7;
+      --pink: #ec4899;
+      --blue: #38bdf8;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+
+      --indigo-dim: rgba(99, 102, 241, 0.14);
+      --blue-dim: rgba(56, 189, 248, 0.14);
+      --green-dim: rgba(16, 185, 129, 0.14);
+      --red-dim: rgba(239, 68, 68, 0.14);
+
+      --text: #f5f5fa;
+      --text-dim: #9b9bb0;
+      --text-faint: #6c6c85;
+
+      --grad-main: linear-gradient(135deg, #818cf8 0%, #6366f1 45%, #a855f7 100%);
+      --grad-blue: linear-gradient(135deg, #38bdf8, #6366f1);
+      --grad-green: linear-gradient(135deg, #34d399, #10b981);
+      --shadow-glow: 0 8px 30px rgba(99, 102, 241, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    ::selection {
+      background: rgba(129, 140, 248, 0.35);
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #23233a;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2f2f4d;
+    }
+
+    body {
+      background:
+        radial-gradient(900px 500px at 10% -8%, rgba(129, 140, 248, 0.14), transparent 60%),
+        radial-gradient(800px 460px at 95% 0%, rgba(168, 85, 247, 0.10), transparent 60%),
+        radial-gradient(700px 500px at 50% 110%, rgba(56, 189, 248, 0.06), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      letter-spacing: -0.01em;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand-name,
+    .section-title,
+    .profile-name {
+      font-family: "Lexend", "Inter", sans-serif;
+    }
+
+    .wrap {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 26px 40px 90px;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      margin-bottom: 34px;
+      background: rgba(18, 18, 31, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--grad-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .brand-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .brand-name {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #fff, #c7c9ff 80%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 11px;
+      transition: color .15s ease, background .15s ease;
+      background: none;
+      border: none;
+      font-family: inherit;
+      text-decoration: none;
+    }
+
+    .nav-link svg {
+      width: 17px;
+      height: 17px;
+      opacity: .85;
+    }
+
+    .nav-link.active {
+      color: #fff;
+      background: rgba(129, 140, 248, 0.16);
+    }
+
+    .nav-link:not(.active):hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .hamburger-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .hamburger-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .hamburger-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .mobile-menu .nav-link {
+      width: 100%;
+      justify-content: flex-start;
+      padding: 12px 14px;
+    }
+
+    .mobile-menu .nav-link span {
+      display: inline !important;
+    }
+
+    nav.menu-open .mobile-menu {
+      display: flex;
+    }
+
+    @media (max-width: 900px) {
+      .wrap {
+        padding: 18px 16px 60px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger-btn {
+        display: flex;
+      }
+
+      .section-title {
+        font-size: 15px;
+      }
+
+      .section-underline {
+        width: 36px;
+        height: 3px;
+        margin-bottom: 18px;
+      }
+
+      .info-card {
+        padding: 20px;
+        border-radius: 16px;
+      }
+
+      .field-row {
+        gap: 12px;
+        padding: 13px 0;
+      }
+
+      .field-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+
+      .field-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .field-value {
+        font-size: 14.5px;
+      }
+
+      .edit-actions {
+        flex-wrap: nowrap;
+      }
+
+      .edit-actions .btn {
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+
+      .logout-zone {
+        padding: 18px 20px;
+      }
+
+      .logout-zone .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .info-card-header {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .info-card-header .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .edit-actions .btn {
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+      }
+
+      .logout-zone {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+    }
+
+    .section-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .section-underline {
+      width: 46px;
+      height: 4px;
+      background: var(--grad-main);
+      border-radius: 3px;
+      margin-bottom: 26px;
+    }
+
+    .wrap>.section-title {
+      text-align: center;
+    }
+
+    .wrap>.section-underline {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .15s ease, box-shadow .2s ease, filter .15s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background: var(--grad-main);
+      color: #fff;
+      padding: 12px 20px;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.38);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 10px 30px rgba(129, 140, 248, 0.55);
+      filter: brightness(1.06);
+    }
+
+    .btn-primary svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      padding: 12px 20px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn-danger-outline {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1.5px solid rgba(239, 68, 68, 0.32);
+      color: #f87171;
+      padding: 12px 20px;
+    }
+
+    .btn-danger-outline:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-danger-outline svg {
+      width: 16px;
+      height: 16px;
+      stroke: #f87171;
+    }
+
+    /* PROFILE LAYOUT */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      max-width: 560px;
+      margin: 0 auto;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .info-card {
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 26px;
+    }
+
+    .info-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .info-card-header h3 {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .field-row:last-child {
+      border-bottom: none;
+    }
+
+    .field-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .field-icon svg {
+      width: 19px;
+      height: 19px;
+      color: #fff;
+    }
+
+    .field-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .field-label {
+      font-size: 11.5px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .field-value {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .field-value.muted {
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    .field-input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--card-border);
+      color: var(--text);
+      padding: 10px 13px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s ease;
+    }
+
+    .field-input:focus {
+      border-color: var(--indigo-bright);
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+      justify-content: flex-end;
+    }
+
+    .logout-zone {
+      margin-top: 24px;
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logout-zone-text h4 {
+      font-size: 15.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .logout-zone-text p {
+      font-size: 13.5px;
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1b1b2e;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 13px 22px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 200;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <nav>
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M9 12l2 2 4-4" />
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+          </svg>
+        </div>
+        <div class="brand-name">Digital Attendance</div>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link" href="/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 9.5 12 3l9 6.5" />
+            <path d="M5 10v10h14V10" />
+          </svg>
+          <span>Home</span>
+        </a>
+        <a class="nav-link" href="/report/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M3 9h18" />
+          </svg>
+          <span>Report</span>
+        </a>
+        <button class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6" />
+          </svg>
+          <span>Profile</span>
+        </button>
+      </div>
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <div class="mobile-menu" id="mobileMenu">
+        <a class="nav-link" href="/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 9.5 12 3l9 6.5" />
+            <path d="M5 10v10h14V10" />
+          </svg>
+          <span>Home</span>
+        </a>
+        <a class="nav-link" href="/report/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M3 9h18" />
+          </svg>
+          <span>Report</span>
+        </a>
+        <button class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6" />
+          </svg>
+          <span>Profile</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="section-title">My Profile</div>
+    <div class="section-underline"></div>
+
+    <div class="profile-grid">
+
+      <!-- ============== ACCOUNT DETAILS ============== -->
+      <div>
+        <div class="info-card">
+          <div class="info-card-header">
+            <h3>Account Details</h3>
+            <button class="btn btn-secondary" id="editBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+              Edit
+            </button>
+          </div>
+
+          <!-- VIEW MODE -->
+          <div id="viewMode">
+            <div class="field-row">
+              <div class="field-icon icon-indigo" style="background:var(--grad-main)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6" />
+                </svg>
+              </div>
+              <div class="field-body">
+                <div class="field-label">Full Name</div>
+                <div class="field-value" id="viewName">—</div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-icon" style="background:var(--grad-blue)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 6-10 7L2 6" />
+                </svg>
+              </div>
+              <div class="field-body">
+                <div class="field-label">Email ID</div>
+                <div class="field-value" id="viewEmail">—</div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-icon" style="background:var(--grad-green)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M3 10h18M8 2v4M16 2v4" />
+                </svg>
+              </div>
+              <div class="field-body">
+                <div class="field-label">Account Created</div>
+                <div class="field-value" id="viewCreated">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDIT MODE -->
+          <div id="editMode" class="hidden">
+            <div class="field-row">
+              <div class="field-icon" style="background:var(--grad-main)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6" />
+                </svg>
+              </div>
+              <div class="field-body">
+                <div class="field-label">Full Name</div>
+                <input type="text" class="field-input" id="editName" placeholder="e.g. Aditi Sharma">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-icon" style="background:var(--grad-blue)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 6-10 7L2 6" />
+                </svg>
+              </div>
+              <div class="field-body">
+                <div class="field-label">Email ID</div>
+                <div class="field-value muted" id="editEmail">—</div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-icon" style="background:var(--grad-green)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M3 10h18M8 2v4M16 2v4" />
+                </svg>
+              </div>
+              <div class="field-body">
+                <div class="field-label">Account Created</div>
+                <div class="field-value muted" id="editCreated">—</div>
+              </div>
+            </div>
+
+            <div class="edit-actions">
+              <button class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+              <button class="btn btn-primary" id="saveEditBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGOUT ZONE -->
+        <div class="logout-zone">
+          <div class="logout-zone-text">
+            <h4>Log out of this account</h4>
+            <p>You'll be returned to the home screen.</p>
+          </div>
+          <button class="btn btn-danger-outline" id="logoutBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast">Saved successfully</div>
+
+  <script>
+    const CSRF_TOKEN = '{{ csrf_token }}';
+
+    function formatLongDate(d) {
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    /* ---------- load profile ---------- */
+    let profile = null;
+
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/profile/');
+        if (res.status === 401) {
+          window.location.href = '/login/';
+          return;
+        }
+        profile = await res.json();
+        renderProfile();
+      } catch (err) {
+        console.error(err);
+        showToast('Error loading profile');
+      }
+    }
+
+    /* ---------- DOM refs ---------- */
+    const viewName = document.getElementById('viewName');
+    const viewEmail = document.getElementById('viewEmail');
+    const viewCreated = document.getElementById('viewCreated');
+    const editName = document.getElementById('editName');
+    const editEmail = document.getElementById('editEmail');
+    const editCreated = document.getElementById('editCreated');
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    const editBtn = document.getElementById('editBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const toast = document.getElementById('toast');
+
+    /* ---------- mobile hamburger menu ---------- */
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navEl = document.querySelector('nav');
+    hamburgerBtn.addEventListener('click', () => navEl.classList.toggle('menu-open'));
+
+    function renderProfile() {
+      if (!profile) return;
+      const createdLabel = formatLongDate(new Date(profile.created));
+      viewName.textContent = profile.name;
+      viewEmail.textContent = profile.email;
+      viewCreated.textContent = createdLabel;
+      editEmail.textContent = profile.email;
+      editCreated.textContent = createdLabel;
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    loadProfile();
+
+    /* ---------- edit mode ---------- */
+    editBtn.addEventListener('click', () => {
+      if (!profile) return;
+      editName.value = profile.name;
+      viewMode.classList.add('hidden');
+      editMode.classList.remove('hidden');
+      editBtn.classList.add('hidden');
+      setTimeout(() => editName.focus(), 50);
+    });
+
+    cancelEditBtn.addEventListener('click', () => {
+      viewMode.classList.remove('hidden');
+      editMode.classList.add('hidden');
+      editBtn.classList.remove('hidden');
+    });
+
+    saveEditBtn.addEventListener('click', async () => {
+      const name = editName.value.trim();
+      if (!name) {
+        showToast('Please enter your name');
+        return;
+      }
+      
+      try {
+        const res = await fetch('/api/profile/update/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': CSRF_TOKEN
+          },
+          body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          profile.name = name;
+          renderProfile();
+          viewMode.classList.remove('hidden');
+          editMode.classList.add('hidden');
+          editBtn.classList.remove('hidden');
+          showToast('Profile updated successfully');
+        } else {
+          showToast(data.message || 'Failed to update profile');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Error updating profile');
+      }
+    });
+
+    /* ---------- logout ---------- */
+    logoutBtn.addEventListener('click', async () => {
+      const confirmed = confirm('Are you sure you want to log out?');
+      if (!confirmed) return;
+      
+      try {
+        const res = await fetch('/api/logout/', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': CSRF_TOKEN
+          }
+        });
+        showToast('Logged out. Redirecting…');
+        setTimeout(() => { window.location.href = '/login/'; }, 700);
+      } catch (err) {
+        console.error(err);
+        window.location.href = '/login/';
+      }
+    });
+  </script>
+
+</body>
+
+</html>
