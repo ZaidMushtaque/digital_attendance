@@ -12,4 +12,4 @@ env/
 media/
 staticfiles/
 
-*.log
+*.logi
