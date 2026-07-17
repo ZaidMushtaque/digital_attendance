@@ -276,11 +276,11 @@
       padding: 22px;
       cursor: pointer;
       transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-      overflow: hidden;
     }
     .class-card::before{
       content:"";
       position:absolute; top:0; left:0; right:0; height:3px;
+      border-radius: 18px 18px 0 0;
       background: var(--grad-main);
       opacity: 0;
       transition: opacity .2s ease;
@@ -296,6 +296,14 @@
       justify-content: space-between;
       align-items:flex-start;
       margin-bottom: 16px;
+      gap: 12px;
+    }
+    .class-card-header{
+      display:flex;
+      align-items:flex-start;
+      gap: 14px;
+      min-width: 0;
+      flex: 1;
     }
     .class-icon{
       width: 50px; height:50px;
@@ -303,6 +311,7 @@
       background: var(--grad-main);
       display:flex; align-items:center; justify-content:center;
       box-shadow: 0 6px 18px rgba(99,102,241,0.3);
+      flex-shrink: 0;
     }
     .class-icon svg{ width:24px; height:24px; color: #fff; }
 
@@ -347,11 +356,14 @@
     .menu-item svg{ width:15px; height:15px; }
 
     .class-name{
-      font-size: 17px;
+      font-size: 16.5px;
       font-weight: 700;
-      margin-bottom: 16px;
       letter-spacing: -0.01em;
       position: relative; z-index: 1;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.3;
+      min-width: 0;
     }
     .field-label{
       font-size: 11.5px;
@@ -360,18 +372,6 @@
       text-transform: uppercase;
       letter-spacing: 0.07em;
       font-weight: 600;
-    }
-    .class-code{
-      display:inline-block;
-      background: var(--indigo-dim);
-      color: var(--indigo-bright);
-      font-weight: 700;
-      font-size: 13px;
-      padding: 5px 12px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      letter-spacing: 0.03em;
-      font-family: 'SF Mono', 'Courier New', monospace;
     }
     .class-created{
       display:flex;
@@ -382,6 +382,39 @@
       margin-bottom: 20px;
       font-weight: 500;
     }
+    /* COPY ROW (used in Class Details modal) */
+    .copy-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--card-border);
+      border-radius: 11px;
+      padding: 11px 14px;
+      margin-bottom: 20px;
+    }
+    .copy-value{
+      font-family: 'SF Mono', 'Courier New', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .copy-btn{
+      background:none; border:none; cursor:pointer;
+      color: var(--text-faint);
+      padding: 6px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display:flex; align-items:center; justify-content:center;
+      transition: background .15s ease, color .15s ease;
+    }
+    .copy-btn:hover{ background: rgba(255,255,255,0.08); color: var(--indigo-bright); }
+    .copy-btn svg{ width:16px; height:16px; }
+    .copy-btn.copied{ color: #10b981; }
     .class-created svg{ width:14px; height:14px; opacity:.8; }
 
     .card-actions{
@@ -867,11 +900,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg>
         <span>Home</span>
       </button>
-      <a class="nav-link" href="/report/">
+      <a class="nav-link" href="report.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
         <span>Report</span>
       </a>
-      <a class="nav-link" href="/profile/">
+      <a class="nav-link" href="profile.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg>
         <span>Profile</span>
       </a>
@@ -884,11 +917,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg>
         <span>Home</span>
       </button>
-      <a class="nav-link" href="/report/">
+      <a class="nav-link" href="report.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
         <span>Report</span>
       </a>
-      <a class="nav-link" href="/profile/">
+      <a class="nav-link" href="profile.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg>
         <span>Profile</span>
       </a>
@@ -1042,6 +1075,41 @@
   </div>
 </div>
 
+<!-- Class Details Modal -->
+<div class="overlay" id="detailsOverlay">
+  <div class="modal">
+    <h3>Class Details</h3>
+
+    <label>Class Name</label>
+    <div class="copy-row">
+      <span class="copy-value" id="detailsNameValue"></span>
+      <button class="copy-btn" data-copy-target="detailsNameValue" title="Copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+
+    <label>Class Code</label>
+    <div class="copy-row">
+      <span class="copy-value" id="detailsCodeValue"></span>
+      <button class="copy-btn" data-copy-target="detailsCodeValue" title="Copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+
+    <label>Class Password</label>
+    <div class="copy-row">
+      <span class="copy-value" id="detailsPasswordValue"></span>
+      <button class="copy-btn" data-copy-target="detailsPasswordValue" title="Copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="detailsCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Add / Edit Student Modal -->
 <div class="overlay" id="studentOverlay">
   <div class="modal">
@@ -1061,8 +1129,8 @@
 </div>
 
 <script>
-  let classes = [];
-  const CSRF_TOKEN = '{{ csrf_token }}';
+  const STORAGE_KEY = 'digitalAttendanceClasses';
+  let classes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   let editingId = null;        // class being renamed
   let currentClassId = null;   // class currently open in detail view
   let editingStudentId = null; // student being edited (null = adding new)
@@ -1078,23 +1146,26 @@
     });
   }
 
-  /* ---------- load classes from backend ---------- */
-  async function loadClasses() {
-    try {
-      const res = await fetch('/api/classes/');
-      if (res.status === 401) {
-        window.location.href = '/login/';
-        return;
-      }
-      classes = await res.json();
-      renderHome();
-      if (currentClassId) {
-        renderDetail();
-      }
-    } catch (err) {
-      console.error("Error loading classes:", err);
-    }
-  }
+
+  /* ---------- migration: convert old single-status field into per-day records ---------- */
+  (function migrate(){
+    let changed = false;
+    classes.forEach(cls => {
+      if(typeof cls.totalClass !== 'number'){ cls.totalClass = 0; changed = true; }
+      if(typeof cls.lastMarkedDate === 'undefined'){ cls.lastMarkedDate = null; changed = true; }
+      (cls.students || []).forEach(s => {
+        if(!s.records){
+          s.records = {};
+          if(s.status && s.status !== 'none' && cls.lastMarkedDate){
+            s.records[cls.lastMarkedDate] = s.status;
+          }
+          delete s.status;
+          changed = true;
+        }
+      });
+    });
+    if(changed) save();
+  })();
 
   /* ---------- DOM refs ---------- */
   const homeView = document.getElementById('homeView');
@@ -1104,6 +1175,8 @@
   const overlay = document.getElementById('overlay');
   const modalTitle = document.getElementById('modalTitle');
   const classNameInput = document.getElementById('classNameInput');
+
+  const detailsOverlay = document.getElementById('detailsOverlay');
 
   const studentOverlay = document.getElementById('studentOverlay');
   const studentModalTitle = document.getElementById('studentModalTitle');
@@ -1116,11 +1189,24 @@
   const searchRoll = document.getElementById('searchRoll');
   const searchName = document.getElementById('searchName');
 
+  /* ---------- persistence ---------- */
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(classes));
+  }
+
   function generateCode(){
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     let code = '';
     for(let i=0;i<7;i++) code += chars[Math.floor(Math.random()*chars.length)];
     return code;
+  }
+
+  function generatePassword(){
+    // Avoids visually-confusing characters (0/O, 1/l/I) for easier sharing
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    let pwd = '';
+    for(let i=0;i<8;i++) pwd += chars[Math.floor(Math.random()*chars.length)];
+    return pwd;
   }
 
   function formatDate(d){
@@ -1162,6 +1248,15 @@
   // Today's status for a student ('present' | 'absent' | 'none')
   function getTodayStatus(s){
     return (s.records && s.records[todayKey()]) || 'none';
+  }
+
+  // Registers that at least one mark happened today (increments the "Total Class" counter once per day)
+  function registerAttendanceSession(cls){
+    const today = todayKey();
+    if(cls.lastMarkedDate !== today){
+      cls.lastMarkedDate = today;
+      cls.totalClass = (cls.totalClass || 0) + 1;
+    }
   }
 
   // A student's own all-time attendance percentage
@@ -1219,14 +1314,21 @@
       card.dataset.classId = cls.id;
       card.innerHTML = `
         <div class="class-card-top">
-          <div class="class-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+          <div class="class-card-header">
+            <div class="class-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+            </div>
+            <div class="class-name">${escapeHtml(cls.name)}</div>
           </div>
           <div style="position:relative;">
             <button class="menu-btn" data-menu="${cls.id}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>
             </button>
             <div class="menu-dropdown" id="menu-${cls.id}">
+              <button class="menu-item" data-details="${cls.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                Details
+              </button>
               <button class="menu-item" data-rename="${cls.id}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                 Rename
@@ -1238,9 +1340,6 @@
             </div>
           </div>
         </div>
-        <div class="class-name">${escapeHtml(cls.name)}</div>
-        <div class="field-label">Class Code</div>
-        <div class="class-code">${cls.code}</div>
         <div class="class-created">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
           Created ${cls.created}
@@ -1254,6 +1353,7 @@
 
   grid.addEventListener('click', (e) => {
     const menuBtn = e.target.closest('[data-menu]');
+    const detailsBtn = e.target.closest('[data-details]');
     const renameBtn = e.target.closest('[data-rename]');
     const deleteBtn = e.target.closest('[data-delete]');
     const card = e.target.closest('.class-card');
@@ -1264,6 +1364,12 @@
       const isOpen = dd.classList.contains('open');
       closeAllMenus();
       if(!isOpen) dd.classList.add('open');
+      return;
+    }
+
+    if(detailsBtn){
+      closeAllMenus();
+      openDetailsModal(detailsBtn.dataset.details);
       return;
     }
 
@@ -1294,31 +1400,61 @@
     document.querySelectorAll('.menu-dropdown.open').forEach(el => el.classList.remove('open'));
   }
 
-  async function deleteClass(id){
-    const confirmed = confirm('Are you sure you want to delete this class?');
-    if (!confirmed) return;
-    try {
-      const res = await fetch(`/api/classes/${id}/delete/`, {
-        method: 'POST',
-        headers: { 'X-CSRFToken': CSRF_TOKEN }
-      });
-      if (res.ok) {
-        classes = classes.filter(c => String(c.id) !== String(id));
-        renderHome();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  function deleteClass(id){
+    classes = classes.filter(c => c.id !== id);
+    save();
+    renderHome();
   }
 
   function openRenameModal(id){
     editingId = id;
-    const cls = classes.find(c => String(c.id) === String(id));
+    const cls = classes.find(c => c.id === id);
     modalTitle.textContent = 'Rename Class';
     classNameInput.value = cls.name;
     overlay.classList.add('open');
     setTimeout(() => classNameInput.focus(), 50);
   }
+
+  function openDetailsModal(id){
+    const cls = classes.find(c => c.id === id);
+    if(!cls) return;
+
+    // Backward compatibility: classes created before this feature won't have a password yet
+    if(!cls.password){
+      cls.password = generatePassword();
+      save();
+    }
+
+    document.getElementById('detailsNameValue').textContent = cls.name;
+    document.getElementById('detailsCodeValue').textContent = cls.code;
+    document.getElementById('detailsPasswordValue').textContent = cls.password;
+    detailsOverlay.classList.add('open');
+  }
+
+  function closeDetailsModal(){
+    detailsOverlay.classList.remove('open');
+  }
+
+  document.getElementById('detailsCloseBtn').addEventListener('click', closeDetailsModal);
+  detailsOverlay.addEventListener('click', (e) => { if(e.target === detailsOverlay) closeDetailsModal(); });
+
+  detailsOverlay.addEventListener('click', (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if(!btn) return;
+    const targetEl = document.getElementById(btn.dataset.copyTarget);
+    const text = targetEl ? targetEl.textContent : '';
+    if(!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const originalHTML = btn.innerHTML;
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = originalHTML;
+      }, 1200);
+    }).catch(() => {});
+  });
 
   function openAddClassModal(){
     editingId = null;
@@ -1339,44 +1475,39 @@
   document.getElementById('confirmBtn').addEventListener('click', submitClassModal);
   classNameInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') submitClassModal(); });
 
-  async function submitClassModal(){
+  function submitClassModal(){
     const name = classNameInput.value.trim();
     if(!name) return;
 
-    try {
-      if(editingId){
-        const res = await fetch(`/api/classes/${editingId}/rename/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-          body: JSON.stringify({ name })
-        });
-        if (res.ok) {
-          const updatedCls = await res.json();
-          const cls = classes.find(c => String(c.id) === String(editingId));
-          if (cls) cls.name = updatedCls.name;
-        }
-      } else {
-        const res = await fetch('/api/classes/add/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-          body: JSON.stringify({ name })
-        });
-        if (res.ok) {
-          const newCls = await res.json();
-          classes.unshift(newCls);
-        }
-      }
-      renderHome();
-      closeClassModal();
-    } catch (err) {
-      console.error(err);
+    if(editingId){
+      const cls = classes.find(c => c.id === editingId);
+      cls.name = name;
+    } else {
+      classes.unshift({
+        id: 'c' + Date.now(),
+        name,
+        code: generateCode(),
+        password: generatePassword(),
+        created: formatDate(new Date()),
+        totalClass: 0,
+        lastMarkedDate: null,
+        students: []
+      });
     }
+    save();
+    renderHome();
+    closeClassModal();
   }
 
   /* ================= DETAIL VIEW ================= */
 
   function getCurrentClass(){
-    return classes.find(c => String(c.id) === String(currentClassId));
+    const cls = classes.find(c => c.id === currentClassId);
+    if(cls){
+      if(typeof cls.totalClass !== 'number') cls.totalClass = 0;
+      if(typeof cls.lastMarkedDate === 'undefined') cls.lastMarkedDate = null;
+    }
+    return cls;
   }
 
   function openDetailView(id){
@@ -1493,7 +1624,7 @@
   searchRoll.addEventListener('input', renderStudentTable);
   searchName.addEventListener('input', renderStudentTable);
 
-  studentTableBody.addEventListener('click', async (e) => {
+  studentTableBody.addEventListener('click', (e) => {
     const presentBtn = e.target.closest('[data-present]');
     const absentBtn = e.target.closest('[data-absent]');
     const editBtn = e.target.closest('[data-edit]');
@@ -1502,54 +1633,34 @@
     if(!cls) return;
 
     if(presentBtn){
-      const s = cls.students.find(x => String(x.id) === String(presentBtn.dataset.present));
+      const s = cls.students.find(x => x.id === presentBtn.dataset.present);
       const wasNotPresent = getTodayStatus(s) !== 'present';
       const key = todayKey();
-      const status = wasNotPresent ? 'present' : 'none';
-      
-      try {
-        const res = await fetch(`/api/students/${s.id}/attendance/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-          body: JSON.stringify({ date: key, status: status })
-        });
-        if (res.ok) {
-          const updatedCls = await res.json();
-          const idx = classes.findIndex(c => String(c.id) === String(currentClassId));
-          if (idx !== -1) {
-            classes[idx] = updatedCls;
-          }
-          renderDetail();
-        }
-      } catch (err) {
-        console.error(err);
+      if(!s.records) s.records = {};
+      if(wasNotPresent){
+        s.records[key] = 'present';
+        registerAttendanceSession(cls);
+      } else {
+        delete s.records[key];
       }
+      save();
+      renderDetail();
       return;
     }
 
     if(absentBtn){
-      const s = cls.students.find(x => String(x.id) === String(absentBtn.dataset.absent));
+      const s = cls.students.find(x => x.id === absentBtn.dataset.absent);
       const wasNotAbsent = getTodayStatus(s) !== 'absent';
       const key = todayKey();
-      const status = wasNotAbsent ? 'absent' : 'none';
-      
-      try {
-        const res = await fetch(`/api/students/${s.id}/attendance/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-          body: JSON.stringify({ date: key, status: status })
-        });
-        if (res.ok) {
-          const updatedCls = await res.json();
-          const idx = classes.findIndex(c => String(c.id) === String(currentClassId));
-          if (idx !== -1) {
-            classes[idx] = updatedCls;
-          }
-          renderDetail();
-        }
-      } catch (err) {
-        console.error(err);
+      if(!s.records) s.records = {};
+      if(wasNotAbsent){
+        s.records[key] = 'absent';
+        registerAttendanceSession(cls);
+      } else {
+        delete s.records[key];
       }
+      save();
+      renderDetail();
       return;
     }
 
@@ -1573,7 +1684,7 @@
 
   function openEditStudentModal(studentId){
     const cls = getCurrentClass();
-    const s = cls.students.find(x => String(x.id) === String(studentId));
+    const s = cls.students.find(x => x.id === studentId);
     if(!s) return;
     editingStudentId = studentId;
     studentModalTitle.textContent = 'Edit Student';
@@ -1597,7 +1708,7 @@
   nameInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') submitStudentModal(); });
   rollInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') submitStudentModal(); });
 
-  async function submitStudentModal(){
+  function submitStudentModal(){
     const roll = rollInput.value.trim();
     const name = nameInput.value.trim();
     if(!roll || !name) return;
@@ -1605,66 +1716,35 @@
     const cls = getCurrentClass();
     if(!cls) return;
 
-    try {
-      if(editingStudentId){
-        const res = await fetch(`/api/students/${editingStudentId}/edit/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-          body: JSON.stringify({ roll, name })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          const studentIndex = cls.students.findIndex(s => String(s.id) === String(editingStudentId));
-          if (studentIndex !== -1) {
-            cls.students[studentIndex] = data;
-          }
-          renderDetail();
-          closeStudentModal();
-        } else {
-          alert(data.message || 'Failed to save student');
-        }
-      } else {
-        const res = await fetch(`/api/classes/${currentClassId}/students/add/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-          body: JSON.stringify({ roll, name })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          cls.students.push(data);
-          renderDetail();
-          closeStudentModal();
-        } else {
-          alert(data.message || 'Failed to add student');
-        }
-      }
-    } catch (err) {
-      console.error(err);
+    if(editingStudentId){
+      const s = cls.students.find(x => x.id === editingStudentId);
+      s.roll = roll;
+      s.name = name;
+    } else {
+      cls.students.push({
+        id: 's' + Date.now() + Math.floor(Math.random()*1000),
+        roll,
+        name,
+        records: {}
+      });
     }
+
+    save();
+    renderDetail();
+    closeStudentModal();
   }
 
-  deleteStudentBtn.addEventListener('click', async () => {
+  deleteStudentBtn.addEventListener('click', () => {
     const cls = getCurrentClass();
     if(!cls || !editingStudentId) return;
-    const confirmed = confirm('Are you sure you want to delete this student?');
-    if (!confirmed) return;
-    try {
-      const res = await fetch(`/api/students/${editingStudentId}/delete/`, {
-        method: 'POST',
-        headers: { 'X-CSRFToken': CSRF_TOKEN }
-      });
-      if (res.ok) {
-        cls.students = cls.students.filter(s => String(s.id) !== String(editingStudentId));
-        renderDetail();
-        closeStudentModal();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    cls.students = cls.students.filter(s => s.id !== editingStudentId);
+    save();
+    renderDetail();
+    closeStudentModal();
   });
 
   /* ---------- init ---------- */
-  loadClasses();
+  renderHome();
 </script>
 
 </body>
