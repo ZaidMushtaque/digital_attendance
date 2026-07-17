@@ -815,15 +815,11 @@
     }
 
     /* ---------- load or initialize profile ---------- */
-    let profile = JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
-    if (!profile) {
-      profile = {
-        name: 'Your Name',
-        email: 'you@example.com',
-        created: new Date().toISOString()
-      };
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-    }
+    let profile = {
+      name: 'Loading...',
+      email: 'Loading...',
+      created: new Date().toISOString()
+    };
 
     /* ---------- DOM refs ---------- */
     const viewName = document.getElementById('viewName');
@@ -860,7 +856,19 @@
       setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    renderProfile();
+    function loadProfile() {
+      fetch('/api/profile/')
+        .then(res => res.json())
+        .then(data => {
+          profile = data;
+          renderProfile();
+        })
+        .catch(err => {
+          console.error('Error loading profile:', err);
+          showToast('Failed to load profile');
+        });
+    }
+    loadProfile();
 
     /* ---------- edit mode ---------- */
     editBtn.addEventListener('click', () => {
@@ -883,21 +891,54 @@
         showToast('Please enter your name');
         return;
       }
-      profile.name = name;
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-      renderProfile();
-      viewMode.classList.remove('hidden');
-      editMode.classList.add('hidden');
-      editBtn.classList.remove('hidden');
-      showToast('Profile updated successfully');
+      
+      fetch('/api/profile/update/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ name })
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(err => { throw err; });
+        }
+        return res.json();
+      })
+      .then(data => {
+        profile.name = name;
+        renderProfile();
+        viewMode.classList.remove('hidden');
+        editMode.classList.add('hidden');
+        editBtn.classList.remove('hidden');
+        showToast('Profile updated successfully');
+      })
+      .catch(err => {
+        showToast(err.message || 'Error updating profile');
+      });
     });
 
     /* ---------- logout ---------- */
     logoutBtn.addEventListener('click', () => {
       const confirmed = confirm('Are you sure you want to log out?');
       if (!confirmed) return;
-      showToast('Logged out. Redirecting…');
-      setTimeout(() => { window.location.href = 'login.html'; }, 700);
+      
+      fetch('/api/logout/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(res => {
+        showToast('Logged out. Redirecting…');
+        setTimeout(() => { window.location.href = '/login/'; }, 700);
+      })
+      .catch(err => {
+        console.error('Logout error:', err);
+        window.location.href = '/login/';
+      });
     });
   </script>
 

@@ -374,9 +374,35 @@
 
       if (hasError) return;
 
-      // No backend authentication — this is a front-end only demo flow.
-      showToast('Logged in successfully');
-      setTimeout(() => { window.location.href = 'index.html'; }, 700);
+      fetch('/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          email: email.value.trim(),
+          password: password.value
+        })
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(err => { throw err; });
+        }
+        return res.json();
+      })
+      .then(data => {
+        showToast('Logged in successfully');
+        setTimeout(() => { window.location.href = '/'; }, 700);
+      })
+      .catch(err => {
+        showToast(err.message || 'Invalid email ID or password');
+        if (err.message && err.message.toLowerCase().includes('password')) {
+          passwordError.textContent = err.message;
+        } else {
+          emailError.textContent = err.message || 'Invalid email ID or password';
+        }
+      });
     });
   </script>
 

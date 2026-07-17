@@ -1129,11 +1129,23 @@
 </div>
 
 <script>
-  const STORAGE_KEY = 'digitalAttendanceClasses';
-  let classes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let classes = [];
   let editingId = null;        // class being renamed
   let currentClassId = null;   // class currently open in detail view
   let editingStudentId = null; // student being edited (null = adding new)
+
+  function loadClasses(){
+    return fetch('/api/classes/')
+      .then(res => res.json())
+      .then(data => {
+        classes = data;
+        renderHome();
+        if(currentClassId) {
+          renderDetail();
+        }
+      })
+      .catch(err => console.error('Error loading classes:', err));
+  }
 
   const AVATAR_COLORS = ['#6366f1','#38bdf8','#f59e0b','#10b981','#ec4899','#a855f7','#f43f5e','#06b6d4'];
 
@@ -1190,9 +1202,7 @@
   const searchName = document.getElementById('searchName');
 
   /* ---------- persistence ---------- */
-  function save(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(classes));
-  }
+  function save(){}
 
   function generateCode(){
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -1401,9 +1411,20 @@
   }
 
   function deleteClass(id){
-    classes = classes.filter(c => c.id !== id);
-    save();
-    renderHome();
+    const confirmed = confirm('Are you sure you want to delete this class?');
+    if(!confirmed) return;
+    fetch(`/api/classes/${id}/delete/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      loadClasses();
+    })
+    .catch(err => console.error('Error deleting class:', err));
   }
 
   function openRenameModal(id){
@@ -1480,23 +1501,36 @@
     if(!name) return;
 
     if(editingId){
-      const cls = classes.find(c => c.id === editingId);
-      cls.name = name;
+      fetch(`/api/classes/${editingId}/rename/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        loadClasses();
+        closeClassModal();
+      })
+      .catch(err => console.error('Error renaming class:', err));
     } else {
-      classes.unshift({
-        id: 'c' + Date.now(),
-        name,
-        code: generateCode(),
-        password: generatePassword(),
-        created: formatDate(new Date()),
-        totalClass: 0,
-        lastMarkedDate: null,
-        students: []
-      });
+      fetch('/api/classes/add/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        loadClasses();
+        closeClassModal();
+      })
+      .catch(err => console.error('Error creating class:', err));
     }
-    save();
-    renderHome();
-    closeClassModal();
   }
 
   /* ================= DETAIL VIEW ================= */
@@ -1635,32 +1669,56 @@
     if(presentBtn){
       const s = cls.students.find(x => x.id === presentBtn.dataset.present);
       const wasNotPresent = getTodayStatus(s) !== 'present';
-      const key = todayKey();
-      if(!s.records) s.records = {};
-      if(wasNotPresent){
-        s.records[key] = 'present';
-        registerAttendanceSession(cls);
-      } else {
-        delete s.records[key];
-      }
-      save();
-      renderDetail();
+      const status = wasNotPresent ? 'present' : 'none';
+      
+      fetch(`/api/students/${s.id}/attendance/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          date: todayKey(),
+          status: status
+        })
+      })
+      .then(res => res.json())
+      .then(updatedClass => {
+        const idx = classes.findIndex(c => c.id === updatedClass.id);
+        if(idx !== -1) {
+          classes[idx] = updatedClass;
+        }
+        renderDetail();
+      })
+      .catch(err => console.error('Error marking attendance:', err));
       return;
     }
 
     if(absentBtn){
       const s = cls.students.find(x => x.id === absentBtn.dataset.absent);
       const wasNotAbsent = getTodayStatus(s) !== 'absent';
-      const key = todayKey();
-      if(!s.records) s.records = {};
-      if(wasNotAbsent){
-        s.records[key] = 'absent';
-        registerAttendanceSession(cls);
-      } else {
-        delete s.records[key];
-      }
-      save();
-      renderDetail();
+      const status = wasNotAbsent ? 'absent' : 'none';
+      
+      fetch(`/api/students/${s.id}/attendance/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          date: todayKey(),
+          status: status
+        })
+      })
+      .then(res => res.json())
+      .then(updatedClass => {
+        const idx = classes.findIndex(c => c.id === updatedClass.id);
+        if(idx !== -1) {
+          classes[idx] = updatedClass;
+        }
+        renderDetail();
+      })
+      .catch(err => console.error('Error marking attendance:', err));
       return;
     }
 
@@ -1717,34 +1775,70 @@
     if(!cls) return;
 
     if(editingStudentId){
-      const s = cls.students.find(x => x.id === editingStudentId);
-      s.roll = roll;
-      s.name = name;
+      fetch(`/api/students/${editingStudentId}/edit/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ roll, name })
+      })
+      .then(res => {
+        if (!res.ok) return res.json().then(e => { throw e; });
+        return res.json();
+      })
+      .then(data => {
+        loadClasses();
+        closeStudentModal();
+      })
+      .catch(err => {
+        alert(err.message || 'Error updating student');
+      });
     } else {
-      cls.students.push({
-        id: 's' + Date.now() + Math.floor(Math.random()*1000),
-        roll,
-        name,
-        records: {}
+      fetch(`/api/classes/${cls.id}/students/add/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ roll, name })
+      })
+      .then(res => {
+        if (!res.ok) return res.json().then(e => { throw e; });
+        return res.json();
+      })
+      .then(data => {
+        loadClasses();
+        closeStudentModal();
+      })
+      .catch(err => {
+        alert(err.message || 'Error adding student');
       });
     }
-
-    save();
-    renderDetail();
-    closeStudentModal();
   }
 
   deleteStudentBtn.addEventListener('click', () => {
     const cls = getCurrentClass();
     if(!cls || !editingStudentId) return;
-    cls.students = cls.students.filter(s => s.id !== editingStudentId);
-    save();
-    renderDetail();
-    closeStudentModal();
+    const confirmed = confirm('Are you sure you want to delete this student?');
+    if(!confirmed) return;
+    fetch(`/api/students/${editingStudentId}/delete/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      loadClasses();
+      closeStudentModal();
+    })
+    .catch(err => console.error('Error deleting student:', err));
   });
 
   /* ---------- init ---------- */
-  renderHome();
+  loadClasses();
 </script>
 
 </body>

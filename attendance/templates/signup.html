@@ -429,17 +429,36 @@
 
       if (hasError) return;
 
-      // No backend authentication — this is a front-end only demo flow.
-      // Save the profile locally so profile.html can display it.
-      const profile = {
-        name: fullName.value.trim(),
-        email: email.value.trim(),
-        created: new Date().toISOString()
-      };
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-
-      showToast('Account created successfully');
-      setTimeout(() => { window.location.href = 'login.html'; }, 800);
+      fetch('/api/signup/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          fullName: fullName.value.trim(),
+          email: email.value.trim(),
+          password: password.value
+        })
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(err => { throw err; });
+        }
+        return res.json();
+      })
+      .then(data => {
+        showToast('Account created successfully');
+        setTimeout(() => { window.location.href = '/login/'; }, 800);
+      })
+      .catch(err => {
+        showToast(err.message || 'Error creating account');
+        if (err.message && err.message.toLowerCase().includes('email')) {
+          emailError.textContent = err.message;
+        } else {
+          fullNameError.textContent = err.message || 'Error creating account';
+        }
+      });
     });
   </script>
 
