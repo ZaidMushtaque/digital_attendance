@@ -688,7 +688,8 @@
 </div>
 
 <script>
-  let classes = [];
+  const STORAGE_KEY = 'digitalAttendanceClasses';
+  const classes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   const AVATAR_COLORS = ['#6366f1','#38bdf8','#f59e0b','#10b981','#ec4899','#a855f7','#f43f5e','#06b6d4'];
 
   const classSelect = document.getElementById('classSelect');
@@ -707,32 +708,13 @@
   const navEl = document.querySelector('nav');
   hamburgerBtn.addEventListener('click', () => navEl.classList.toggle('menu-open'));
 
-  /* ---------- load classes from backend ---------- */
-  async function loadClasses() {
-    try {
-      const res = await fetch('/api/classes/');
-      if (res.status === 401) {
-        window.location.href = '/login/';
-        return;
-      }
-      classes = await res.json();
-      populateDropdown();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  function populateDropdown() {
-    classSelect.innerHTML = '<option value="" disabled selected>Select a class…</option>';
-    classes.forEach(cls => {
-      const opt = document.createElement('option');
-      opt.value = cls.id;
-      opt.textContent = cls.name;
-      classSelect.appendChild(opt);
-    });
-  }
-
-  loadClasses();
+  /* ---------- populate dropdown ---------- */
+  classes.forEach(cls => {
+    const opt = document.createElement('option');
+    opt.value = cls.id;
+    opt.textContent = cls.name;
+    classSelect.appendChild(opt);
+  });
 
   /* ---------- helpers (mirrors Home page attendance model) ---------- */
   function escapeHtml(str){
@@ -821,7 +803,7 @@
       placeholderState.classList.remove('hidden');
       return;
     }
-    selectedClass = classes.find(c => String(c.id) === String(id));
+    selectedClass = classes.find(c => c.id === id);
     if(!selectedClass){
       reportContent.classList.add('hidden');
       placeholderState.classList.remove('hidden');
