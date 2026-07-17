@@ -364,7 +364,8 @@
   <div class="toast" id="toast">Account created successfully</div>
 
   <script>
-    const CSRF_TOKEN = '{{ csrf_token }}';
+    const PROFILE_KEY = 'digitalAttendanceProfile';
+
     const form = document.getElementById('signupForm');
     const fullName = document.getElementById('fullName');
     const email = document.getElementById('email');
@@ -388,7 +389,7 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     }
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
       fullNameError.textContent = '';
       emailError.textContent = '';
@@ -428,30 +429,17 @@
 
       if (hasError) return;
 
-      try {
-        const res = await fetch('/api/signup/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': CSRF_TOKEN
-          },
-          body: JSON.stringify({
-            fullName: fullName.value.trim(),
-            email: email.value.trim(),
-            password: password.value
-          })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          showToast('Account created successfully');
-          setTimeout(() => { window.location.href = '/login/'; }, 800);
-        } else {
-          showToast(data.message || 'Signup failed');
-        }
-      } catch (err) {
-        console.error(err);
-        showToast('An error occurred during signup');
-      }
+      // No backend authentication — this is a front-end only demo flow.
+      // Save the profile locally so profile.html can display it.
+      const profile = {
+        name: fullName.value.trim(),
+        email: email.value.trim(),
+        created: new Date().toISOString()
+      };
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+
+      showToast('Account created successfully');
+      setTimeout(() => { window.location.href = 'login.html'; }, 800);
     });
   </script>
 
